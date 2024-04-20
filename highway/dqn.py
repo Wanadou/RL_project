@@ -116,10 +116,6 @@ class DQN:
             next_state_batch,
         ) = tuple([torch.cat(data) for data in zip(*transitions)])
 
-        # print(f"State batch ({state_batch.shape}): {state_batch}")
-        # print(f"Action batch ({action_batch.shape}): {action_batch}")
-
-
         values = self.q_net.forward(state_batch).gather(1, action_batch)
 
         # Compute the ideal Q values
@@ -129,10 +125,11 @@ class DQN:
             ).max(1)[0]
             targets = next_state_values * self.gamma + reward_batch
 
-
+        #######################
+        # force targets dtype fo Double (float32)
         targets = targets.unsqueeze(1).float()
-        # print(f"Values ({values.shape}, {values.dtype}): {values}")
-        # print(f"Targets ({targets.shape}, {targets.dtype}): {targets}")
+        #######################
+
         loss = self.loss_function(values, targets)
 
         # Optimize the model
@@ -156,15 +153,14 @@ class DQN:
         """
         Compute Q function for a states
         """
+        #######################
         # reshape state to 1 dimension
         reshaped_state = state.reshape(-1)
-        # print(f"State: {reshaped_state}")
-        # print(f"State shape: {reshaped_state.shape}")
         state_tensor = torch.tensor(reshaped_state).unsqueeze(0)
+        #######################
+
         with torch.no_grad():
-            # print(f"State tensor: {state_tensor}")
-            # print(f"State tensor shape: {state_tensor.shape}")
-            output = self.q_net.forward(state_tensor) # shape (1,  n_actions)
+            output = self.q_net.forward(state_tensor)  # shape (1,  n_actions)
         return output.numpy()[0]  # shape  (n_actions)
 
     def get_action(self, state, epsilon=None):
@@ -188,14 +184,21 @@ class DQN:
 
     def reset(self):
 
-        obs_size = self.observation_space.shape[0] * self.observation_space.shape[1]
+        #######################
+        # compute total number of observations
+        # (nedd for np.product() since the shape of the observation_space tensor can vary depending on the configured observations)
+        obs_size = np.product(self.observation_space.shape)
+        #######################
+
         n_actions = self.action_space.n
-        # print(f"Observation size: {obs_size}")
-        # print(f"Action size: {n_actions}")
 
         self.buffer = ReplayBuffer(self.buffer_capacity)
         self.q_net = Net(obs_size, self.hidden_size, n_actions)
         self.target_net = Net(obs_size, self.hidden_size, n_actions)
+
+        #######################
+        print(f"Q net: {self.q_net}")
+        #######################
 
         self.loss_function = nn.MSELoss()
         self.optimizer = optim.Adam(
