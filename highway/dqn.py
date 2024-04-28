@@ -208,3 +208,21 @@ class DQN:
         self.epsilon = self.epsilon_start
         self.n_steps = 0
         self.n_eps = 0
+
+
+    def save_state(self, filename='dqn_model.pth'):
+        """
+        Save the model state to a file.
+        """
+        torch.save(self.q_net.state_dict(), filename)
+        print(f"Model saved to {filename}")
+
+    def load_state(self, filename='dqn_model.pth'):
+        """
+        Load the model state from a file.
+        """
+        self.q_net.load_state_dict(torch.load(filename))
+        self.target_net.load_state_dict(self.q_net.state_dict())
+        self.q_net.eval()
+        self.target_net.eval()
+        print(f"Model loaded from {filename}")
