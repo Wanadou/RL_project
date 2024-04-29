@@ -101,7 +101,7 @@ env = gym.make("highway-fast-v0", render_mode="rgb_array")
 config = {
     "observation": {
         "type": "OccupancyGrid",
-        "vehicles_count": 3,
+        "vehicles_count": 5,
         "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
         "features_range": {
             "x": [-100, 100],
@@ -111,30 +111,29 @@ config = {
         },
         "grid_size": [[-20, 20], [-20, 20]],
         "grid_step": [5, 5],
-        "absolute": False,
+        "absolute": True,
     },
     "action": {
         "type": "DiscreteAction",
         "longitudinal": True,  # enable throttle control
-        "lateral": False,  # enable steering control
+        "lateral": True,  # enable steering control
         "dynamical": False,  # whether to simulate dynamics (i.e. friction) rather than kinematics
-        "steering_range": [-np.pi / 4, np.pi / 4],  # [rad]
-        "acceleration_range": [-5, 5],  # [m/s²]
-        "speed_range": [0, 10],  # [m/s]
+        "steering_range": [-np.pi / 8, np.pi / 8],  # [rad]
+        "acceleration_range": [-2, 2],  # [m/s²]
+        "speed_range": [0, 15],  # [m/s]
+        "actions_per_axis": 3,
     },
     "lanes_count": 4,
     "vehicles_count": 10,
     "duration": 40,  # [s]
     "initial_spacing": 0,
     "collision_reward": -1,  # The reward received when colliding with a vehicle.
-    "right_lane_reward": 0.5,  # The reward received when driving on the right-most lanes, linearly mapped to
-    # zero for other lanes.
-    "high_speed_reward": 0.1,  # The reward received when driving at full speed, linearly mapped to zero for
-    # lower speeds according to config["reward_speed_range"].
-    "lane_change_reward": 0,
+    "right_lane_reward": 0,  # The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes.
+    "high_speed_reward": 0.5,  # The reward received when driving at full speed, linearly mapped to zero for lower speeds according to config["reward_speed_range"].
+    "lane_change_reward": 0.2,
     "reward_speed_range": [
-        20,
-        30,
+        5,
+        15,
     ],  # [m/s] The reward for high speed is mapped linearly from this range to [0, HighwayEnv.HIGH_SPEED_REWARD].
     "simulation_frequency": 5,  # [Hz]
     "policy_frequency": 1,  # [Hz]
@@ -147,6 +146,7 @@ config = {
     "render_agent": True,
     "offscreen_rendering": False,
     "disable_collision_checks": True,
+    "normalize_reward": True,
 }
 """
 
