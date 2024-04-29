@@ -1,6 +1,7 @@
 import gymnasium as gym
 import highway_env
 import matplotlib.pyplot as plt
+import numpy as np
 # from utils import record_videos, show_videos
 
 env = gym.make("racetrack-v0", render_mode="rgb_array")
@@ -8,16 +9,19 @@ env = gym.make("racetrack-v0", render_mode="rgb_array")
 config = {
     "observation": {
         "type": "OccupancyGrid",
-        "features": ['presence', 'on_road'],
+        "features": ["presence", "on_road"],
         "grid_size": [[-18, 18], [-18, 18]],
-        "grid_step": [3, 3],
+        "grid_step": [5, 5],
         "as_image": False,
         "align_to_vehicle_axes": True
     },
     "action": {
         "type": "ContinuousAction",
-        "longitudinal": False,
-        "lateral": True
+        "longitudinal": True,
+        "lateral": True,
+        "steering_range": [-np.pi / 4, np.pi / 4],  # [rad]
+        "acceleration_range": [-2, 2],  # [m/s²]
+        "speed_range": [0, 15],  # [m/s]
     },
     "simulation_frequency": 15,
     "policy_frequency": 5,
