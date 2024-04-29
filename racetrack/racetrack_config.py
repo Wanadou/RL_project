@@ -1,13 +1,11 @@
 import gymnasium as gym
 import highway_env
 import matplotlib.pyplot as plt
-from utils import record_videos, show_videos
+# from utils import record_videos, show_videos
 
 env = gym.make("racetrack-v0", render_mode="rgb_array")
 
 config = {
-
-    {
     "observation": {
         "type": "OccupancyGrid",
         "features": ['presence', 'on_road'],
@@ -36,18 +34,20 @@ config = {
     "show_trajectories": False,
     "render_agent": True,
     "offscreen_rendering": False
-    }
-
 }
+
+
 env.unwrapped.configure(config)
+env.reset()
+# env.unwrapped.configure(config)
 
-env = record_videos(env)
-(obs, info), done = env.reset(), False
-for episode in range(100):
-    env.step(2) 
+# env = record_videos(env)
+# (obs, info), done = env.reset(), False
+# for episode in range(100):
+#     env.step(2) 
 
-env.close()
-show_videos()
+# env.close()
+# show_videos()
 
 
 # show_videos()
