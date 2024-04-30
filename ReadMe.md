@@ -56,11 +56,11 @@ $$
 
 5. Update the parameters $\theta$ to minimize the loss, e.g., with gradient descent (**keeping $\theta^-$ fixed**):
 
-   $$
-   \theta \gets \theta - \eta \nabla_\theta L(\theta)
-   $$
+$$
+\theta \gets \theta - \eta \nabla_\theta L(\theta)
+$$
 
-   where $\eta$ is the optimization learning rate.
+where $\eta$ is the optimization learning rate.
 
 6. Every $N$ transitions ($t\mod N$ = 0), update target parameters: $\theta^- \gets \theta$.
 
