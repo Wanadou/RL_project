@@ -14,6 +14,8 @@ config = {
         "normalize": False,
     },
     "action": {"type": "ContinuousAction"},
+    "reward_weights": [1, 0.5, 0.1, 0.1, 0.02, 0.02],
+    "success_goal_reward": 0.14,
     "simulation_frequency": 15,
     "policy_frequency": 5,
     "screen_width": 600,
