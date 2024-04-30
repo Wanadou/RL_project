@@ -104,14 +104,14 @@ config = {
         "vehicles_count": 5,
         "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
         "features_range": {
-            "x": [-100, 100],
+            "x": [-100, 300],
             "y": [-100, 100],
             "vx": [-20, 20],
             "vy": [-20, 20],
         },
-        "grid_size": [[-20, 20], [-20, 20]],
-        "grid_step": [5, 5],
-        "absolute": True,
+        "grid_size": [[-27.5, 27.5], [-27.5, 3*27.5]],
+        "grid_step": [2.5, 2.5],
+        "absolute": False,
     },
     "action": {
         "type": "DiscreteAction",
@@ -120,20 +120,20 @@ config = {
         "dynamical": False,  # whether to simulate dynamics (i.e. friction) rather than kinematics
         "steering_range": [-np.pi / 8, np.pi / 8],  # [rad]
         "acceleration_range": [-2, 2],  # [m/s²]
-        "speed_range": [0, 15],  # [m/s]
-        "actions_per_axis": 3,
+        "speed_range": [10, 40],  # [m/s]
+        "actions_per_axis": 5,
     },
     "lanes_count": 4,
     "vehicles_count": 10,
-    "duration": 40,  # [s]
+    "duration": 100,  # [s]
     "initial_spacing": 0,
     "collision_reward": -1,  # The reward received when colliding with a vehicle.
-    "right_lane_reward": 0,  # The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes.
+    "right_lane_reward": 0.3,  # The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes.
     "high_speed_reward": 0.5,  # The reward received when driving at full speed, linearly mapped to zero for lower speeds according to config["reward_speed_range"].
     "lane_change_reward": 0.2,
     "reward_speed_range": [
-        5,
-        15,
+        20,
+        40,
     ],  # [m/s] The reward for high speed is mapped linearly from this range to [0, HighwayEnv.HIGH_SPEED_REWARD].
     "simulation_frequency": 5,  # [Hz]
     "policy_frequency": 1,  # [Hz]
@@ -150,6 +150,56 @@ config = {
 }
 """
 
+config_v3 = {
+    "observation": {
+        "type": "OccupancyGrid",
+        "vehicles_count": 5,
+        "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
+        "features_range": {
+            "x": [-100, 300],
+            "y": [-100, 100],
+            "vx": [-20, 20],
+            "vy": [-20, 20],
+        },
+        "grid_size": [[-27.5, 27.5], [-27.5, 3*27.5]],
+        "grid_step": [2.5, 2.5],
+        "absolute": False,
+    },
+    "action": {
+        "type": "DiscreteAction",
+        "longitudinal": True,  # enable throttle control
+        "lateral": True,  # enable steering control
+        "dynamical": False,  # whether to simulate dynamics (i.e. friction) rather than kinematics
+        "steering_range": [-np.pi / 8, np.pi / 8],  # [rad]
+        "acceleration_range": [-2, 2],  # [m/s²]
+        "speed_range": [10, 40],  # [m/s]
+        "actions_per_axis": 7,
+    },
+    "lanes_count": 4,
+    "vehicles_count": 10,
+    "duration": 100,  # [s]
+    "initial_spacing": 0,
+    "collision_reward": -1,  # The reward received when colliding with a vehicle.
+    "right_lane_reward": 0,  # The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes.
+    "high_speed_reward": 0.5,  # The reward received when driving at full speed, linearly mapped to zero for lower speeds according to config["reward_speed_range"].
+    "lane_change_reward": 0.8,
+    "reward_speed_range": [
+        20,
+        40,
+    ],  # [m/s] The reward for high speed is mapped linearly from this range to [0, HighwayEnv.HIGH_SPEED_REWARD].
+    "simulation_frequency": 5,  # [Hz]
+    "policy_frequency": 5,  # [Hz]
+    "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
+    "screen_width": 600,  # [px]
+    "screen_height": 150,  # [px]
+    "centering_position": [0.3, 0.5],
+    "scaling": 5.5,
+    "show_trajectories": False,
+    "render_agent": True,
+    "offscreen_rendering": False,
+    "disable_collision_checks": True,
+    "normalize_reward": True,
+}
 
 config = {
     "observation": {

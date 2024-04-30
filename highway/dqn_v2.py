@@ -36,21 +36,41 @@ class ReplayBuffer_v2:
 
 
 class CNN(nn.Module):
-    def __init__(self, input_channels, n_actions):
+    def __init__(self, input_channels, width, height, n_actions):
         super(CNN, self).__init__()
+        # Initialize convolutions to handle width and height
         self.conv_layers = nn.Sequential(
-            nn.Conv2d(input_channels, 16, kernel_size=2, stride=1, padding=1),  # Outputs 9x9
+            # First Convolutional Layer
+            nn.Conv2d(input_channels, 16, kernel_size=3, stride=1, padding=1),
+            # Output size: (width, height) (no change due to padding=1 and kernel_size=3)
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=2),  # Reduces size to 4x4
-            nn.Conv2d(16, 32, kernel_size=2, stride=1, padding=0),  # Reduces size to 3x3
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            # Output size: (width // 2, height // 2)
+
+            # Second Convolutional Layer
+            nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
+            # Output size: (width // 2, height // 2) (no change due to padding=1 and kernel_size=3)
             nn.ReLU(),
-            nn.MaxPool2d(kernel_size=2, stride=1),  # Reduces size to 2x2 (optional additional pooling)
+            nn.MaxPool2d(kernel_size=2, stride=2),
+            # Output size: (width // 4, height // 4)
+
+            # Third Convolutional Layer
+            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+            # Output size: (width // 4, height // 4) (no change due to padding=1 and kernel_size=3)
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2)
+            # Final output size: (width // 8, height // 8)
         )
+
+        # Calculate the output dimensions after the convolutions and pooling
+        out_width = width // 8
+        out_height = height // 8
+        
         self.fc_layers = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(32 * 2 * 2, 64),  # Adjusted to match the output from the last pooling layer
+            nn.Linear(64 * out_width * out_height, 128),  # Adjusted to a reasonable size
             nn.ReLU(),
-            nn.Linear(64, n_actions)
+            nn.Linear(128, n_actions)
         )
 
     def forward(self, x):
@@ -94,8 +114,8 @@ class DQN_v2:
         n_actions = self.action_space.n
 
         self.buffer = ReplayBuffer_v2(self.buffer_capacity)
-        self.q_net = CNN(7, n_actions)
-        self.target_net = CNN(7, n_actions)
+        self.q_net = CNN(input_channels = 7, width = 44, height = 22, n_actions = n_actions)
+        self.target_net = CNN(input_channels = 7, width = 44, height = 22, n_actions = n_actions)
 
         self.loss_function = nn.MSELoss()
         self.optimizer = optim.Adam(params=self.q_net.parameters(), lr=self.learning_rate)
@@ -207,8 +227,8 @@ class DQN_v2:
         n_actions = self.action_space.n
 
         self.buffer = ReplayBuffer_v2(self.buffer_capacity)
-        self.q_CNN = CNN(self.input_channels, n_actions)
-        self.target_CNN = CNN(self.input_channels, n_actions)
+        self.q_CNN = CNN(input_channels = self.input_channels, width = 44, height = 22, n_actions = n_actions)
+        self.target_CNN = CNN(input_channels = self.input_channels, width = 44, height = 22, n_actions = n_actions)
 
         #######################
         print(f"Q CNN: {self.q_CNN}")
