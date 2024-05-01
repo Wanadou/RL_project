@@ -102,15 +102,15 @@ config = {
     "observation": {
         "type": "OccupancyGrid",
         "vehicles_count": 5,
-        "features": ["presence", "x", "y", "vx", "vy", "cos_h", "sin_h"],
+        "features": ["presence", "x", "y", "vx", "vy"],
         "features_range": {
             "x": [-100, 300],
             "y": [-100, 100],
             "vx": [-20, 20],
             "vy": [-20, 20],
         },
-        "grid_size": [[-27.5, 27.5],[-13.75, 3*13.75]],
-        "grid_step": [2.5, 1.25],
+        "grid_size": [[-27.5, 27.5],[-5, 30]],
+        "grid_step": [2.5, 1],
         "absolute": False,
     },
     "action": {
@@ -120,23 +120,24 @@ config = {
         "dynamical": False,  # whether to simulate dynamics (i.e. friction) rather than kinematics
         "steering_range": [-np.pi / 16, np.pi / 16],  # [rad]
         "acceleration_range": [-2, 2],  # [m/s²]
-        "speed_range": [10, 40],  # [m/s]
+        "speed_range": [10, 30],  # [m/s]
         "actions_per_axis": 3,
     },
     "lanes_count": 4,
-    "vehicles_count": 10,
+    "vehicles_count": 30,
     "duration": 100,  # [s]
     "initial_spacing": 0,
     "collision_reward": -1,  # The reward received when colliding with a vehicle.
     "right_lane_reward": 0,  # The reward received when driving on the right-most lanes, linearly mapped to zero for other lanes.
     "high_speed_reward": 0.5,  # The reward received when driving at full speed, linearly mapped to zero for lower speeds according to config["reward_speed_range"].
     "lane_change_reward": 0,
+    "on_road_reward": 0.1,
     "reward_speed_range": [
         20,
-        40,
+        30,
     ],  # [m/s] The reward for high speed is mapped linearly from this range to [0, HighwayEnv.HIGH_SPEED_REWARD].
-    "simulation_frequency": 5,  # [Hz]
-    "policy_frequency": 5,  # [Hz]
+    "simulation_frequency": 10,  # [Hz]
+    "policy_frequency": 10,  # [Hz]
     "other_vehicles_type": "highway_env.vehicle.behavior.IDMVehicle",
     "screen_width": 600,  # [px]
     "screen_height": 150,  # [px]

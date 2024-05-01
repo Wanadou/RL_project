@@ -35,15 +35,15 @@ class CNN(nn.Module):
     def __init__(self, input_channels, width, height, n_actions):
         super(CNN, self).__init__()
         self.conv_layers = nn.Sequential(
-            nn.Conv2d(input_channels, 16, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(input_channels, 8, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
 
-            nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(8, 16, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
 
-            nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(16, 8, kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2)
         )
@@ -54,9 +54,9 @@ class CNN(nn.Module):
         
         self.fc_layers = nn.Sequential(
             nn.Flatten(),
-            nn.Linear(64 * out_width * out_height, 128),  
+            nn.Linear(8 * out_width * out_height, 16),  
             nn.ReLU(),
-            nn.Linear(128, n_actions)
+            nn.Linear(16, n_actions)
         )
 
     def forward(self, x):
@@ -100,8 +100,8 @@ class DQN:
         n_actions = self.action_space.n
 
         self.buffer = ReplayBuffer_v2(self.buffer_capacity)
-        self.q_net = CNN(input_channels = 7, width = 44, height = 22, n_actions = n_actions)
-        self.target_net = CNN(input_channels = 7, width = 44, height = 22, n_actions = n_actions)
+        self.q_net = CNN(input_channels = 5, width = 35, height = 22, n_actions = n_actions)
+        self.target_net = CNN(input_channels = 5, width = 35, height = 22, n_actions = n_actions)
 
         self.loss_function = nn.MSELoss()
         self.optimizer = optim.Adam(params=self.q_net.parameters(), lr=self.learning_rate)
@@ -198,8 +198,8 @@ class DQN:
         n_actions = self.action_space.n
 
         self.buffer = ReplayBuffer_v2(self.buffer_capacity)
-        self.q_CNN = CNN(input_channels = self.input_channels, width = 44, height = 22, n_actions = n_actions)
-        self.target_CNN = CNN(input_channels = self.input_channels, width = 44, height = 22, n_actions = n_actions)
+        self.q_CNN = CNN(input_channels = self.input_channels, width = 35, height = 22, n_actions = n_actions)
+        self.target_CNN = CNN(input_channels = self.input_channels, width = 35, height = 22, n_actions = n_actions)
 
         print(f"Q CNN: {self.q_CNN}")
 
