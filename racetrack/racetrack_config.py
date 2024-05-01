@@ -2,6 +2,8 @@ import gymnasium as gym
 import highway_env
 import matplotlib.pyplot as plt
 import numpy as np
+from highway_env.envs import RacetrackEnv
+from typing import Dict, Text
 # from utils import record_videos, show_videos
 
 env = gym.make("racetrack-v0", render_mode="rgb_array")
@@ -17,10 +19,10 @@ config = {
     },
     "action": {
         "type": "ContinuousAction",
-        "longitudinal": True,
+        "longitudinal": False,
         "lateral": True,
         "steering_range": [-np.pi / 4, np.pi / 4],  # [rad]
-        "acceleration_range": [-2, 2],  # [m/s²]
+        #"acceleration_range": [-2, 2],  # [m/s²]
         "speed_range": [0, 15],  # [m/s]
     },
     "simulation_frequency": 15,
@@ -43,8 +45,6 @@ config = {
 
 env.unwrapped.configure(config)
 env.reset()
-# env.unwrapped.configure(config)
-
 # env = record_videos(env)
 # (obs, info), done = env.reset(), False
 # for episode in range(100):
